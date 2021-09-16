@@ -1,7 +1,7 @@
 #!/bin/bash
 
 webhook_url=$1
-full_json_file=$2
+#full_json_file=$2
 diff_json_file=$3
 
 [ -z "$webhook_url" ] && {
@@ -31,9 +31,12 @@ do
 
   ###update the commuit info###
   #git_project_path=`cat $full_json_file | grep app_path | awk -F'"' '{print $4}'`
-  repo=`cat $full_json_file | grep app_path | awk -F'"' '{print $4}' | awk -F'/' '{print $4}'`
-  git_branch=`cd /tmp/$repo/$repo && git log -1 --pretty=format:%d | awk -F"," '{print $2}' | awk -F"origin/" '{print $2}' | awk -F")" '{print $1}'`
-  git_commit_info=`cd /tmp/$repo/$repo && git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%H",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
+  #repo=`cat $full_json_file | grep app_path | awk -F'"' '{print $4}' | awk -F'/' '{print $4}'`
+  #git_branch=`cd /tmp/$repo/$repo && git log -1 --pretty=format:%d | awk -F"," '{print $2}' | awk -F"origin/" '{print $2}' | awk -F")" '{print $1}'`
+  #git_commit_info=`cd /tmp/$repo/$repo && git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%H",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
+  repo=`echo $2 | awk -F"," '{print $1}'`
+  git_branch=`echo $2 | awk -F"," '{print $2}'`
+  git_commit_info=`git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%H",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
   echo "$git_commit_info" >> brakeman-output-"$n".json
 
   ###update repo info###
