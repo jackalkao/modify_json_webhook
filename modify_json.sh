@@ -42,8 +42,8 @@ do
   ###update repo info###
   echo '"repo_name": "'$repo'"' >> brakeman-output-"$n".json
   echo '}' >> brakeman-output-"$n".json
-  sleep 60
   curl -X POST $webhook_url -H "Content-Type:\ application/json" -d @"brakeman-output-"$n".json"
+  sleep 60
   num=$(( $n + 1 ))
  done
   [ -z "$output_warning_type" -o "$output_warning_type" = "null" ] &&
