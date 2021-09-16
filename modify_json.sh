@@ -2,14 +2,17 @@
 
 webhook_url=$1
 json_file=$2
+
 [ -z "$webhook_url" ] && {
   echo -e "\033[41;37mPlease set webhook url\033[0m"
   exit
 }
+
 [ -z "$json_file" ] && {
   echo -e "\033[41;37mPlease set json file name\033[0m"
   exit
 }
+
 num=0
 while true
 do
@@ -31,7 +34,6 @@ do
   git_commit_info=`cd $git_project_path && git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%H",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
   echo "$git_commit_info" >> brakeman-output-"$n".json
 
-echo $git_branch
   ###update repo info###
   repo=`cat $json_file | grep app_path | awk -F'"' '{print $4}' | awk -F'/' '{print $4}'`
   echo '"repo_name": "'$repo'"' >> brakeman-output-"$n".json
