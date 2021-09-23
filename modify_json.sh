@@ -4,6 +4,7 @@ webhook_url=$1
 #full_json_file=$2
 diff_json_file=$3
 
+#Check webhook url and diff json file not null
 [ -z "$webhook_url" ] && {
   echo -e "\033[41;37mPlease set webhook url\033[0m"
   exit
@@ -19,6 +20,7 @@ while true
 do
  for n in $num
  do
+  ###get all json data in json file###
   output_warning_type=`cat $diff_json_file | jq '.new' | jq ".[$n]"`
   [ -z "$output_warning_type" -o "$output_warning_type" = "null" ] &&
   {
@@ -43,6 +45,7 @@ do
   echo '"repo_name": "'$repo'"' >> brakeman-output-"$n".json
   echo '}' >> brakeman-output-"$n".json
   curl -X POST $webhook_url -H "Content-Type:\ application/json" -d @"brakeman-output-"$n".json"
+  rm -rf brakeman-output-"$n".json
   sleep 60
   num=$(( $n + 1 ))
  done
