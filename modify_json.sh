@@ -20,7 +20,7 @@ while true
 do
  for n in $num
  do
-  ###get all json data in json file###
+  ###get all json data in json file and list array###
   output_warning_type=`cat $diff_json_file | jq '.new' | jq ".[$n]"`
   [ -z "$output_warning_type" -o "$output_warning_type" = "null" ] &&
   {
@@ -38,14 +38,14 @@ do
   #git_commit_info=`cd /tmp/$repo/$repo && git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%H",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
   repo=`echo $2 | awk -F"," '{print $1}'`
   git_branch=`echo $2 | awk -F"," '{print $2}'`
-  git_commit_info=`git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%H",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
+  git_commit_info=`git log -1 --pretty=format:'  "git_commit": [%n    {%n      "id": "%h",%n      "message": "%s",%n      "notes": "%N",%n      "name": "%aN",%n      "email": "%aE",%n      "date": "%aD",%n      "branch": "'$git_branch'"%n    }%n  ],%n'`
   echo "$git_commit_info" >> brakeman-output-"$n".json
 
   ###update repo info###
   echo '"repo_name": "'$repo'"' >> brakeman-output-"$n".json
   echo '}' >> brakeman-output-"$n".json
   curl -X POST $webhook_url -H "Content-Type:\ application/json" -d @"brakeman-output-"$n".json"
-  #rm -rf brakeman-output-"$n".json
+  rm -rf brakeman-output-"$n".json
   sleep 60
   num=$(( $n + 1 ))
  done
