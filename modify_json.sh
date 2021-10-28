@@ -24,6 +24,7 @@ do
   output_warning_type=`cat $diff_json_file | jq '.new' | jq ".[$n]"`
   [ -z "$output_warning_type" -o "$output_warning_type" = "null" ] &&
   {
+   echo -e "\033[41;37mNo new issue\033[0m"
    break
   }
   echo "{" > brakeman-output-"$n".json
