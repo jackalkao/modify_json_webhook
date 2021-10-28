@@ -44,7 +44,7 @@ do
   echo "$git_commit_info" >> brakeman-output-"$n".json
   cat brakeman-output-0.json
   ###update repo info###
-  echo '"repo_name": "'$repo'"' >> brakeman-output-"$n".json
+  echo '"repo_name": "'$repo'",' >> brakeman-output-"$n".json
   echo '"pull_request_id": "'$pr_id'"' >> brakeman-output-"$n".json
   echo '}' >> brakeman-output-"$n".json
   curl -X POST $webhook_url -H "Content-Type:\ application/json" -d @"brakeman-output-"$n".json"
